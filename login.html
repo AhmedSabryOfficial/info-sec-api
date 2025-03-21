@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>تسجيل الدخول</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background: #f9f9f9;
+    }
+    form {
+      max-width: 400px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      padding: 10px;
+      width: 100%;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #message {
+      max-width: 400px;
+      margin: 20px auto;
+      text-align: center;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h2 style="text-align: center;">تسجيل الدخول</h2>
+  <form id="loginForm">
+    <label for="username">اسم المستخدم:</label>
+    <input type="text" id="username" name="username" required>
+    <label for="password">كلمة المرور:</label>
+    <input type="password" id="password" name="password" required>
+    <button type="submit">دخول</button>
+    <a href="index.php">الصفحة الرئيسية</a><br>
+
+    <a href="signup.html">تسجيل لاول مرة</a>
+
+  </form>
+  <div id="message"></div>
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+      
+      fetch("api/auth.php?action=login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+      })
+      .then(response => response.json())
+      .then(data => {
+        const messageDiv = document.getElementById("message");
+        if(data.token) {
+          messageDiv.style.color = "green";
+          messageDiv.innerText = "تم تسجيل الدخول بنجاح.";
+          // تخزين التوكن وإعادة التوجيه إلى صفحة تعديل المنتجات
+          localStorage.setItem("token", data.token);
+          window.location.href = "api/edit_product.php";
+        } else if(data.error) {
+          messageDiv.style.color = "red";
+          messageDiv.innerText = data.error;
+        }
+      })
+      .catch(error => {
+        console.error("Error:", error);
+        document.getElementById("message").innerText = "حدث خطأ أثناء تسجيل الدخول.";
+      });
+    });
+  </script>
+</body>
+</html>
