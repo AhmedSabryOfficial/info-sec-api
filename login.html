@@ -79,7 +79,6 @@
         if(data.token) {
           messageDiv.style.color = "green";
           messageDiv.innerText = "تم تسجيل الدخول بنجاح.";
-          // تخزين التوكن وإعادة التوجيه إلى صفحة تعديل المنتجات
           localStorage.setItem("token", data.token);
           window.location.href = "api/edit_product.php";
         } else if(data.error) {

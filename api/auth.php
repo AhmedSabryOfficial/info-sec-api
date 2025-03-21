@@ -1,5 +1,4 @@
 <?php
-// auth.php
 header("Content-Type: application/json");
 require_once 'config.php';
 require_once 'jwt_helper.php';
@@ -11,7 +10,6 @@ if ($method == "POST") {
     $action = $_GET['action'] ?? '';
 
     if ($action == "signup") {
-        // بيانات التسجيل
         $name = $request['name'] ?? '';
         $username = $request['username'] ?? '';
         $password = $request['password'] ?? '';
@@ -21,7 +19,6 @@ if ($method == "POST") {
             exit;
         }
 
-        // التحقق من وجود المستخدم
         $stmt = $pdo->prepare("SELECT id FROM users WHERE username = ?");
         $stmt->execute([$username]);
         if ($stmt->rowCount() > 0) {
@@ -29,7 +26,6 @@ if ($method == "POST") {
             exit;
         }
 
-        // تشفير كلمة المرور
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
         $stmt = $pdo->prepare("INSERT INTO users (name, username, password) VALUES (?, ?, ?)");
         if ($stmt->execute([$name, $username, $hashedPassword])) {
@@ -39,7 +35,6 @@ if ($method == "POST") {
         }
     }
     else if ($action == "login") {
-        // بيانات تسجيل الدخول
         $username = $request['username'] ?? '';
         $password = $request['password'] ?? '';
 
@@ -48,13 +43,11 @@ if ($method == "POST") {
             exit;
         }
 
-        // جلب بيانات المستخدم
         $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
         $stmt->execute([$username]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if ($user && password_verify($password, $user['password'])) {
-            // إنشاء توكن JWT
             $token = generateJWT(["id" => $user['id'], "username" => $user['username']]);
             echo json_encode(["token" => $token]);
         } else {

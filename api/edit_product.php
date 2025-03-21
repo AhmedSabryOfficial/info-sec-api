@@ -1,5 +1,4 @@
 <?php
-// edit_product.php - يمكنك بدء الصفحة بـ <?php إذا كنت ترغب في تضمين منطق PHP إضافي، هنا نستخدم HTML/JS فقط
 ?>
 <!DOCTYPE html>
 <html lang="ar">
@@ -32,7 +31,6 @@
 
   <h2>إدارة المنتجات</h2>
 
-  <!-- قسم عرض المنتجات -->
   <div id="productListDiv">
     <h3>قائمة المنتجات</h3>
     <table id="productTable">
@@ -47,12 +45,10 @@
         </tr>
       </thead>
       <tbody>
-        <!-- سيتم تعبئتها بالمنتجات -->
       </tbody>
     </table>
   </div>
 
-  <!-- قسم إضافة منتج جديد -->
   <div id="addProductDiv">
     <h3>إضافة منتج جديد</h3>
     <form id="addProductForm">
@@ -68,7 +64,6 @@
     </form>
   </div>
 
-  <!-- قسم تعديل منتج (سيظهر عند الضغط على زر تعديل) -->
   <div id="editProductDiv" style="display:none;">
     <h3>تعديل المنتج</h3>
     <form id="editProductForm">
@@ -89,14 +84,12 @@
   <div id="message"></div>
 
   <script>
-    // التأكد من وجود التوكن
     const token = localStorage.getItem("token");
     if (!token) {
       alert("يرجى تسجيل الدخول أولاً");
       window.location.href = "../login.html";
     }
 
-    // تسجيل الخروج
     document.getElementById("logout").addEventListener("click", function(){
       localStorage.removeItem("token");
       window.location.href = "../login.html";
@@ -104,7 +97,6 @@
 
     const apiBase = "product.php";
 
-    // دالة لتحميل قائمة المنتجات
     function loadProducts() {
       fetch(apiBase, {
         headers: { "Authorization": "Bearer " + token }
@@ -139,10 +131,8 @@
       });
     }
 
-    // استدعاء تحميل المنتجات عند تحميل الصفحة
     loadProducts();
 
-    // إضافة منتج جديد
     document.getElementById("addProductForm").addEventListener("submit", function(e) {
       e.preventDefault();
       const pname = document.getElementById("add_pname").value;
@@ -177,10 +167,8 @@
       });
     });
 
-    // التعامل مع أزرار التعديل والحذف في القائمة
     document.querySelector("#productTable tbody").addEventListener("click", function(e) {
       if(e.target.classList.contains("edit-btn")) {
-        // جلب بيانات المنتج للتعديل
         const pid = e.target.getAttribute("data-id");
         fetch(apiBase + "?pid=" + pid, {
           headers: { "Authorization": "Bearer " + token }
@@ -204,7 +192,6 @@
         });
       }
       else if(e.target.classList.contains("delete-btn")) {
-        // حذف المنتج
         const pid = e.target.getAttribute("data-id");
         if(confirm("هل أنت متأكد من حذف هذا المنتج؟")) {
           fetch(apiBase + "?pid=" + pid, {
@@ -231,7 +218,6 @@
       }
     });
 
-    // إرسال بيانات التعديل
     document.getElementById("editProductForm").addEventListener("submit", function(e){
       e.preventDefault();
       const pid = document.getElementById("edit_pid").value;
@@ -267,7 +253,6 @@
       });
     });
 
-    // إلغاء التعديل
     document.getElementById("cancelEdit").addEventListener("click", function(){
       document.getElementById("editProductDiv").style.display = "none";
     });

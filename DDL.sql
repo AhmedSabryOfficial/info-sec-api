@@ -1,7 +1,6 @@
 CREATE DATABASE IF NOT EXISTS infosec;
 USE infosec;
 
--- جدول المستخدمين
 CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -9,7 +8,6 @@ CREATE TABLE IF NOT EXISTS users (
     password VARCHAR(255) NOT NULL
 );
 
--- جدول المنتجات
 CREATE TABLE IF NOT EXISTS products (
     pid INT AUTO_INCREMENT PRIMARY KEY,
     pname VARCHAR(150) NOT NULL,
